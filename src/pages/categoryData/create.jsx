@@ -47,7 +47,7 @@ const CategoryForm = () => {
             category: category?.category,
             description: category?.description,
           });
-          console.log(category);
+          
         } catch (error) {
           console.error("Error fetching category:", error);
         } finally {
