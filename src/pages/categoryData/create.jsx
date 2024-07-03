@@ -16,7 +16,7 @@ import {
   categoryCreate,
   getCategoryById,
   updateCategoryById,
-} from "../../api/category";
+} from "../../api/category"; // Adjust the relative path as needed
 import { useNavigate, useParams } from "react-router-dom";
 
 const validationSchema = Yup.object({
@@ -41,13 +41,13 @@ const CategoryForm = () => {
     const fetchCategory = async () => {
       if (id) {
         try {
-          const category = await getCategoryById(id).data;
+          const { data: category } = await getCategoryById(id);
           setInitialValues({
-            title: category?.title,
-            category: category?.category,
-            description: category?.description,
+            title: category.title || "",
+            category: category.category || "",
+            description: category.description || "",
           });
-          
+          console.log(category);
         } catch (error) {
           console.error("Error fetching category:", error);
         } finally {
@@ -60,10 +60,6 @@ const CategoryForm = () => {
     fetchCategory();
   }, [id]);
 
-  useEffect(() => {
-    console.log("Initial values updated:", initialValues);
-  }, [initialValues]);
-
   const formik = useFormik({
     initialValues: initialValues,
     enableReinitialize: true,
@@ -73,6 +69,7 @@ const CategoryForm = () => {
         let response;
         if (id) {
           response = await updateCategoryById(id, values);
+          navigate("/");
           console.log("Category updated successfully:", response);
         } else {
           response = await categoryCreate(values);
